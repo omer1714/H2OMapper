@@ -1,19 +1,73 @@
 <html>
-	<head>
-		<link rel="stylesheet" type="text/css" href="Waterlog.css">
-	</head>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+      <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Waterlog.css">
+    <link href="/apis/fusiontables/docs/samples/style/default.css"
+          rel="stylesheet" type="text/css">
+      <script type="text/javascript"
+          src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-	<body>
-		<div id ="header"> <h1>H2OMapper</h1></div>
+      <script type="text/javascript">
+          function initialize() {
+            var map = new google.maps.Map(document.getElementById('googleMap'), {
+                center: new google.maps.LatLng(49.887945, -119.495721),
+                zoom: 15,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
 
-	    <div id="userbox">
-	      <h1>Welcome to Water Logging</h1>
-	    </div>
+            var infoWindow = new google.maps.InfoWindow();
 
-	    <div id="data">
-      <form action="">
-        <h3>
-          KID: <input type="text" name="kid" required size="6"><br> <!-- kid has only 6 numbers so make a limit of 6 digits with constraints -->
+            // Initialize the first layer
+            var firstLayer = new google.maps.FusionTablesLayer({
+                query: {
+                  select: 'Service Address Kelowna',
+                    from: '1LLHFX9Zn4nd5lJ4fRo-6s8u_M1rROjkVILieAC9T'
+                },
+                map: map,
+                suppressInfoWindows: true
+            });
+            google.maps.event.addListener(firstLayer, 'click', function(e) {
+                windowControl(e, infoWindow, map);
+            });
+
+            // Initialize the second layer
+            var secondLayer = new google.maps.FusionTablesLayer({
+                query: {
+                  select: ,
+                  from: '1AAaHbH3IK0maqpawjnVrZ5R0RAswWDBEKvMp2zDk'
+                },
+                map: map,
+                suppressInfoWindows: true
+            });
+            google.maps.event.addListener(secondLayer, 'click', function(e) {
+                windowControl(e, infoWindow, map);
+            });
+          }
+
+          // Open the info window at the clicked location
+          function windowControl(e, infoWindow, map) {
+            infoWindow.setOptions({
+                content: e.infoWindowHtml,
+                position: e.latLng,
+                pixelOffset: e.pixelOffset
+            });
+            infoWindow.open(map);
+          }
+
+          google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+
+  <body>
+    <h1 id="welcome">Welcome to WaterLogging</h1>
+
+    <div id="searchArea">
+      <form method="POST" id="form">
+      <fieldset>
+        <input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
+                <h3>
+          <!--KID: <input type="text" name="kid" required size="6"><br>  kid has only 6 numbers so make a limit of 6 digits with constraints -->
         </h3>
         <h3>
           Billable ID: <input type="text" name="bid"><br><!-- Same for kid -->
@@ -24,7 +78,7 @@
         <h3>
           Rate Code: <!--<input type="text" name="kid"><br> --> 
           <!-- Dropdown with all the consumption codes-->
-          <select>
+          <select name="rateCode">
             <option value="500">WTR FLAT RESIDENTIAL</option>
             <option value="501">WATER FLATRATE-SFD NO METER</option>
             <option value="544">5/8" METER - MIXED USE - COMM & RES</option>
@@ -138,177 +192,30 @@
         </h3>
         <h3>
           Billable Dates: <input type="text" name="date"><br><!-- Done it-->
-
-
-          <input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
-                <ul>
-                	<li id="firstLi">
-                		<label id="fromLabel" for="firstLi">From</label>
-                		<select class="from" name="fromYear" placeholder="Year">
-                			<option value="" disabled selected>Year</option>
-  							<script>
-  								var myDate = new Date();
-  								var year = myDate.getFullYear();
-  								for(var i = 2013; i < year+1; i++){
-	  								document.write('<option value="'+i+'">'+i+'</option>');
-  								}
-  							</script>
-						</select>
-						<select class="from" name="fromMonth">
-							<option value="" disabled selected>Month</option>
-							<option value="01">01</option>
-							<option value="02">02</option>
-							<option value="03">03</option>
-							<option value="04">04</option>
-							<option value="05">05</option>
-							<option value="06">06</option>
-							<option value="07">07</option>
-							<option value="08">08</option>
-							<option value="09">09</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-						</select>
-                	</li>
-                	<li id="secondLi">
-                		<label id="toLabel" for="secondLi">To</label>
-                		<select class="to" name="toYear" placeholder="Year">
-                			<option value="" disabled selected>Year</option>
-  							<script>
-  								var myDate = new Date();
-  								var year = myDate.getFullYear();
-  								for(var i = 2013; i < year+1; i++){
-	  								document.write('<option value="'+i+'">'+i+'</option>');
-  								}
-  							</script>
-						</select>
-						<select class="to" name="toYear">
-							<option value="" disabled selected>Month</option>
-							<option value="01">01</option>
-							<option value="02">02</option>
-							<option value="03">03</option>
-							<option value="04">04</option>
-							<option value="05">05</option>
-							<option value="06">06</option>
-							<option value="07">07</option>
-							<option value="08">08</option>
-							<option value="09">09</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-						</select>
-                	</li><br><br>
-
-
-
-
-
-
-
-
-
+                  <input type="date" name="fromDate"></input>
+                  <input type="date" name="toDate"></input>
 
         </h3>
         <h3>
           Consumptions: <input type="text" name="consump"><br><!-- 5 digits no constraints-->
         </h3>
+        <div id="outputOption">
+                <h3><label for="outputType" >Output</label></h3>
+                <input type="checkbox" name="outputType1" value="Sum" class="outputType">Sum</input>
+                <input type="checkbox" name="outputType2" value="Average" class="outputType">Average</input>
+            </div>
         <input type="submit" value="Submit">
+        </fieldset>
       </form>
-      <!--Take input and save it as String variable-->
+    </div>
+    <div id="googleMap"></div>
 
+    <script type="text/javascript">
+      
+    </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-		<div id="searchArea">
-			<form method="POST" id="form">
-				<input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
-                <ul>
-                	<li id="firstLi">
-                		<label id="fromLabel" for="firstLi">From</label>
-                		<select class="from" name="fromYear" placeholder="Year">
-                			<option value="" disabled selected>Year</option>
-  							<script>
-  								var myDate = new Date();
-  								var year = myDate.getFullYear();
-  								for(var i = 2013; i < year+1; i++){
-	  								document.write('<option value="'+i+'">'+i+'</option>');
-  								}
-  							</script>
-						</select>
-						<select class="from" name="fromMonth">
-							<option value="" disabled selected>Month</option>
-							<option value="01">01</option>
-							<option value="02">02</option>
-							<option value="03">03</option>
-							<option value="04">04</option>
-							<option value="05">05</option>
-							<option value="06">06</option>
-							<option value="07">07</option>
-							<option value="08">08</option>
-							<option value="09">09</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-						</select>
-                	</li>
-                	<li id="secondLi">
-                		<label id="toLabel" for="secondLi">To</label>
-                		<select class="to" name="toYear" placeholder="Year">
-                			<option value="" disabled selected>Year</option>
-  							<script>
-  								var myDate = new Date();
-  								var year = myDate.getFullYear();
-  								for(var i = 2013; i < year+1; i++){
-	  								document.write('<option value="'+i+'">'+i+'</option>');
-  								}
-  							</script>
-						</select>
-						<select class="to" name="toYear">
-							<option value="" disabled selected>Month</option>
-							<option value="01">01</option>
-							<option value="02">02</option>
-							<option value="03">03</option>
-							<option value="04">04</option>
-							<option value="05">05</option>
-							<option value="06">06</option>
-							<option value="07">07</option>
-							<option value="08">08</option>
-							<option value="09">09</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-						</select>
-                	</li><br><br>
-                	<li>
-                		<label for="outputType">Output</label>
-                		<input type="checkbox" name="outputType1" value="Sum" class="outputType">Sum</input>
-                		<input type="checkbox" name="outputType2" value="Average" class="outputType">Average</input>
-                	</li>
-                </ul><br><br>
-			</form>
-		</div>
-
-		<script type="text/javascript">
-			
-		</script>
-
-		<!-- For opening PDO Connection -->
-      <?php include 'connection.php';?>
-
-
-        <!-- 
-            For Closing PDO connection
-            $conn = null; 
-        -->
-	</body>
+    <?php
+      include 'connection.php';
+    ?>
+  </body>
 </html>

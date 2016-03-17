@@ -2,11 +2,12 @@
 	color: red;
 }
 #searchArea{
-	width: 30%; height:80%;
-	border: 1px solid black;
+	width: 360px; height:500px;
 	padding: 13px;
 	font-family: Courier;
+	float: left;
 	clear: both;
+	font-size: 
 }
 #searchtab{
 	width: 100%;
@@ -19,6 +20,11 @@
     background-position: 10px 10px; 
     background-repeat: no-repeat;
     padding: 12px 20px 12px 40px;
+}
+#googleMap{
+	width: 870px;
+	height: 528px;
+	float: left;
 }
 select{
 	box-sizing: border-box;
