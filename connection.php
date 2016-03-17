@@ -1,8 +1,8 @@
 <?php
-    $servername = "localhost";
-    $username = "user";
-    $password = "password";
-    $dbname = "myDataSet";
+    $servername = "cosc304.ok.ubc.ca";
+    $username = "btruong";
+    $password = "btruong";
+    $dbname = "db_btruong";
 
     // Create connection
     $conn = mysqli_connect($servername, $username, $password, $dbname);
