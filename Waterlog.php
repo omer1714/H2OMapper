@@ -64,17 +64,17 @@
     <h1 id="welcome">Welcome to WaterLogging</h1>
 
     <div id="searchArea">
-      <form method="POST" id="form">
+      <form method="POST" id="form" action="/H2OMapper/table.php">
       <fieldset>
         <input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
                 <h3>
           <!--KID: <input type="text" name="kid" required size="6"><br>  kid has only 6 numbers so make a limit of 6 digits with constraints -->
         </h3>
         <h3>
-          Billable ID: <input type="text" name="bid" required><br><!-- Same for kid -->
+          Billable ID: <input type="text" name="bid"><br><!-- Same for kid -->
         </h3>
         <h3>
-          Address: <input type="text" name="addr" required><br> <!-- 32 Characters no constraints-->
+          Address: <input type="text" name="addr"><br> <!-- 32 Characters no constraints-->
         </h3>
         <h3>
           Rate Code: <!--<input type="text" name="kid"><br> --> 
@@ -192,7 +192,7 @@
           </select>
         </h3>
         <h3>
-          Billable Dates: <input type="text" name="date" required><br><!-- Done it-->
+          Billable Dates:><!-- Done it-->
                   <input type="date" name="fromDate"></input>
                   <input type="date" name="toDate"></input>
 

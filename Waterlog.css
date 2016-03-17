@@ -1,13 +1,14 @@
 #welcome{
 	color: red;
+	margin: auto;
 }
 #searchArea{
-	width: 360px; height:500px;
+	width: 360px; 
+	height:500px;
 	padding: 13px;
 	font-family: Courier;
-	float: left;
 	clear: both;
-	font-size: 
+	font-size:
 }
 #searchtab{
 	width: 100%;
@@ -49,4 +50,8 @@ select{
 #form ul{
 	list-style: none;
 	padding: 5px;
+}
+
+.table{
+	margin: auto;
 }
