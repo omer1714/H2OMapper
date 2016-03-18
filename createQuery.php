@@ -101,9 +101,6 @@ if (isset($_POST['submit'])) { //if submission form pressed
         $sql .= " GROUP BY kid";
     }
 
-   echo $from_date;
-   echo $to_date;
-
     echo $sql."</br>";
 $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
@@ -123,23 +120,26 @@ $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 # KEEP THIS CODE HERE BECAUSE ITS FOR CREATING CSV FILE OFF OF QUERY OUTPUT 
 #--------------------------------------------------------------------------
 
+##$result IS EMPTIED BY THE PRINT ON THE SCREEN STATEMENT
+$result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
-// $myfile = fopen("outfile.csv", "w") or die('Unable to open file');
+$myfile = fopen("outfile.csv", "w") or die('Unable to open file');
 
-// $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
-// fwrite($myfile, $txt);
-// if ($result->num_rows > 0) {
-//     while ($row = $result->fetch_assoc()) {
-//         fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . "," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
-//     }
-// } else {
-//     echo "0 results";
-// }
+$txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
+fwrite($myfile, $txt);
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+    // while ($row = mysqli_fetch_row($result)){    
+        fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . "," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
+    }
+} else {
+    echo "0 results";
+}
 
-// fclose($myfile);
+fclose($myfile);
 
 
-##NEXT DAY: SUM/AVERAGE FOR DATE TIME FACTORING
+
 
 
 }
