@@ -64,22 +64,23 @@
     <h1 id="welcome">Welcome to WaterLogging</h1>
 
     <div id="searchArea">
-      <form method="POST" id="form" action="/H2OMapper/table.php">
+      <form method="POST" id="form" action="/H2OMapper/createQuery.php">
       <fieldset>
         <input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
                 <h3>
           <!--KID: <input type="text" name="kid" required size="6"><br>  kid has only 6 numbers so make a limit of 6 digits with constraints -->
         </h3>
         <h3>
-          Billable ID: <input type="text" name="bid"><br><!-- Same for kid -->
+          Billable ID: <input type="text" name="billable_serv_id"><br><!-- Same for kid -->
         </h3>
         <h3>
-          Address: <input type="text" name="addr"><br> <!-- 32 Characters no constraints-->
+          Address: <input type="text" name="service_addr"><br> <!-- 32 Characters no constraints-->
         </h3>
         <h3>
           Rate Code: <!--<input type="text" name="kid"><br> --> 
           <!-- Dropdown with all the consumption codes-->
-          <select name="rateCode">
+          <select name="rate_code">
+            <option selected disabled hidden style='display: none' value =''>NONE SELECTED</option>
             <option value="500">550 - WTR FLAT RESIDENTIAL</option>
             <option value="501">501 - WATER FLATRATE-SFD NO METER</option>
             <option value="544">544 - 5/8" METER - MIXED USE - COMM & RES</option>
@@ -193,8 +194,8 @@
         </h3>
         <h3>
           Billable Dates:><!-- Done it-->
-                  <input type="date" name="fromDate"></input>
-                  <input type="date" name="toDate"></input>
+                  <input type="date" name="from_date"></input>
+                  <input type="date" name="to_date"></input>
 
         </h3>
         <h3>
@@ -202,10 +203,10 @@
         </h3>
         <div id="outputOption">
                 <h3><label for="outputType" >Output</label></h3>
-                <input type="checkbox" name="outputType1" value="Sum" class="outputType">Sum</input>
-                <input type="checkbox" name="outputType2" value="Average" class="outputType">Average</input>
+                <input type="checkbox" name="consumpsum" value="Sum" class="outputType">Sum</input>
+                <input type="checkbox" name="consumpavg" value="Avg" class="outputType">Average</input>
             </div>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" name="submit">
         </fieldset>
       </form>
     </div>
