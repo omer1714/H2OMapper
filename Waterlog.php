@@ -66,7 +66,6 @@
     <div id="searchArea">
       <form method="POST" id="form" action="/H2OMapper/createQuery.php">
       <fieldset>
-        <input type="text" name="search" placeholder="Search..." id="searchtab"></input><br><br>
                 <h3>
           <!--KID: <input type="text" name="kid" required size="6"><br>  kid has only 6 numbers so make a limit of 6 digits with constraints -->
         </h3>
@@ -199,7 +198,16 @@
 
         </h3>
         <h3>
-          Consumptions: <input type="text" name="consump"><br><!-- 5 digits no constraints-->
+        <div id="COperation">
+
+        Consumptions: 
+        <input type="radio" name="COperation" value="Greater" class="outputType">Greater</input>
+        <input type="radio" name="COperation" value="Equal" class="outputType" checked = "checked">Equal</input>
+        <input type="radio" name="COperation" value="Less" class="outputType">Less</input>
+        </div>
+
+        <input type="text" name="consump"><br><!-- 5 digits no constraints-->
+
         </h3>
         <div id="outputOption">
                 <h3><label for="outputType" >Output</label></h3>

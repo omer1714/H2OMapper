@@ -14,6 +14,8 @@ if (isset($_POST['submit'])) { //if submission form pressed
     // $bill_date = filter_input(INPUT_POST, 'bill_date');
     $consump = filter_input(INPUT_POST, 'consump');
 
+    $COperation = filter_input (INPUT_POST, 'COperation');
+
     //Sum or Average radio toggle chosen, otherwise will output all of them
     $consumpsum = filter_input(INPUT_POST, 'consumpsum');
     $consumpavg = filter_input(INPUT_POST, 'consumpavg');
@@ -22,13 +24,13 @@ if (isset($_POST['submit'])) { //if submission form pressed
 
     if($consumpsum != null or $consumpavg != null){
         if ($consumpsum != null and $consumpavg != null){
-            $sql .= "SUM(bill_hist.consump) AS consumpsum, AVG(bill_hist.consump) AS consumpavg";
+            $sql .= "SUM(bill_hist_main.consump) AS consumpsum, AVG(bill_hist_main.consump) AS consumpavg";
         }
         else if ($consumpsum != null){
-            $sql .= "SUM(bill_hist.consump) AS consumpsum";
+            $sql .= "SUM(bill_hist_main.consump) AS consumpsum";
         }
         else if ($consumpavg != null){
-            $sql .= "AVG(bill_hist.consump) AS consumpavg";
+            $sql .= "AVG(bill_hist_main.consump) AS consumpavg";
         }        
 
     }
@@ -36,7 +38,7 @@ if (isset($_POST['submit'])) { //if submission form pressed
         $sql .= " consump";
     }
 
-    $sql .=" FROM bill_hist ";
+    $sql .=" FROM bill_hist_main ";
 
    if ($kid != null or $billable_serv_id != null or $service_addr != null or $type != null or $rate_code != null or $from_date != null or $to_date != null or $consump != null) {
        $sql .= "WHERE ";
@@ -77,7 +79,7 @@ if (isset($_POST['submit'])) { //if submission form pressed
            if ($count > 0) {
                $sql .= " AND ";
            }
-           $sql .= "bill_date BETWEEN #".$from_date."# AND #".$to_date."#";
+           $sql .= "bill_date BETWEEN '".$from_date."' AND '".$to_date."'";
            $count += 1;
        }       
 
@@ -93,12 +95,25 @@ if (isset($_POST['submit'])) { //if submission form pressed
            if ($count > 0) {
                $sql .= " AND ";
            }
-           $sql .= "consump = " . $consump;
-           $count += 1;
+           if ($COperation == "Equal"){
+                $sql .= "consump = " . $consump;
+                $count += 1;
+           }
+           if ($COperation == "Greater"){
+                $sql .= "consump > " . $consump;
+                $count += 1;
+           }           
+           if ($COperation == "Less"){
+                $sql .= "consump < " . $consump;
+                $count += 1;
+           }           
+
+
+
        }
    }
     if($consumpsum != null or $consumpavg != null){
-        $sql .= " GROUP BY kid";
+        $sql .= " GROUP BY kid, billable_serv_id";
     }
 
     echo $sql."</br>";
@@ -106,9 +121,10 @@ $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
         if ($result = mysqli_query($mysqli, $sql)) {
         // Fetch one and one row
+
         while ($row = mysqli_fetch_row($result)) {
             printf("<h1>%s %s %s %s %s %s %s </h1></br>", $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
-//            echo $row[2]. $row[1];
+           // echo $row[2]. $row[1];
         }
         // Free result set
         mysqli_free_result($result);
@@ -125,16 +141,73 @@ $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
 $myfile = fopen("outfile.csv", "w") or die('Unable to open file');
 
-$txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
-fwrite($myfile, $txt);
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-    // while ($row = mysqli_fetch_row($result)){    
-        fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . "," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
+    if($consumpsum != null or $consumpavg != null){
+        if ($consumpsum != null and $consumpavg != null){
+            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum,consumpavg";
+            fwrite($myfile, $txt);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . ",".$row["consumpavg"]."");
+                }
+            } else {
+                echo "0 results";
+            }     
+
+        }
+        else if ($consumpsum != null){
+            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum";
+            fwrite($myfile, $txt);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . "");
+                }
+            } else {
+                echo "0 results";
+            }
+        }
+        else if ($consumpavg != null){
+            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpavg";
+            fwrite($myfile, $txt);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpavg"] . "");
+                }
+            } else {
+                echo "0 results";
+            }
+        }
     }
-} else {
-    echo "0 results";
-}
+    else{
+        $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
+        fwrite($myfile, $txt);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
+                }
+            } else {
+                echo "0 results";
+            }
+    }
+
+
+
+
+
+
+
+
+
+
+// $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
+// fwrite($myfile, $txt);
+// if ($result->num_rows > 0) {
+//     while ($row = $result->fetch_assoc()) {
+//     // while ($row = mysqli_fetch_row($result)){    
+//         fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . "," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
+//     }
+// } else {
+//     echo "0 results";
+// }
 
 fclose($myfile);
 
