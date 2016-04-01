@@ -20,7 +20,8 @@ if (isset($_POST['submit'])) { //if submission form pressed
     $consumpsum = filter_input(INPUT_POST, 'consumpsum');
     $consumpavg = filter_input(INPUT_POST, 'consumpavg');
 
-    $sql = "SELECT kid, billable_serv_id, service_addr, type, rate_code, bill_date,";
+    $sql = "SELECT bill_hist.kid, billable_serv_id, service_addr, type, rate_code, bill_date,";
+    // $sql = "SELECT bill_hist_main.kid, billable_serv_id, service_addr, type, rate_code, bill_date, ";
 
     if($consumpsum != null or $consumpavg != null){
         if ($consumpsum != null and $consumpavg != null){
@@ -38,7 +39,9 @@ if (isset($_POST['submit'])) { //if submission form pressed
         $sql .= " consump";
     }
 
-    $sql .=" FROM bill_hist_main ";
+    // $sql .=", geometry FROM bill_hist_main INNER JOIN polygon_data_main ON bill_hist_main.kid = polygon_data_main.kid ";
+    $sql .=", geometry FROM bill_hist INNER JOIN polygon_data_main ON bill_hist.kid = polygon_data_main.kid ";
+
 
    if ($kid != null or $billable_serv_id != null or $service_addr != null or $type != null or $rate_code != null or $from_date != null or $to_date != null or $consump != null) {
        $sql .= "WHERE ";
@@ -116,20 +119,28 @@ if (isset($_POST['submit'])) { //if submission form pressed
         $sql .= " GROUP BY kid, billable_serv_id";
     }
 
+    // $sql .= " GROUP BY kid, billable_serv_id";
+
+    // double check the sql statement
     echo $sql."</br>";
+
+
 $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
         if ($result = mysqli_query($mysqli, $sql)) {
         // Fetch one and one row
 
-        while ($row = mysqli_fetch_row($result)) {
-            printf("<h1>%s %s %s %s %s %s %s </h1></br>", $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6]);
-           // echo $row[2]. $row[1];
-        }
+          while ($row = mysqli_fetch_row($result)) {
+              printf("<h1>%s %s %s %s %s %s %s %s </h1></br>", $row[0], $row[1], $row[2], $row[3], $row[4], $row[5], $row[6], htmlentities($row[7], ENT_XHTML));
+              // echo htmlentities($row[7], ENT_XHTML); //This is used to keep the XML tags around the geometry column
+              echo "</br>";
+         }
         // Free result set
         mysqli_free_result($result);
     }
-
+#### 
+#NOTICE IMPORTANT!!!!
+#QUERY IS CORRECT. HOW TO RETRIEVE OUTPUT IS FLAWED. TAKES ABOUT 15 MINUTES FOR A CONCISE QUERY
 
 
 #--------------------------------------------------------------------------
@@ -137,57 +148,57 @@ $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 #--------------------------------------------------------------------------
 
 ##$result IS EMPTIED BY THE PRINT ON THE SCREEN STATEMENT
-$result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
+// $result = mysqli_query($mysqli, $sql) or die(mysqli_error($mysqli));
 
-$myfile = fopen("outfile.csv", "w") or die('Unable to open file');
+// $myfile = fopen("outfile.csv", "w") or die('Unable to open file');
 
-    if($consumpsum != null or $consumpavg != null){
-        if ($consumpsum != null and $consumpavg != null){
-            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum,consumpavg";
-            fwrite($myfile, $txt);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . ",".$row["consumpavg"]."");
-                }
-            } else {
-                echo "0 results";
-            }     
+//     if($consumpsum != null or $consumpavg != null){
+//         if ($consumpsum != null and $consumpavg != null){
+//             $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum,consumpavg";
+//             fwrite($myfile, $txt);
+//             if ($result->num_rows > 0) {
+//                 while ($row = $result->fetch_assoc()) {
+//                     fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . ",".$row["consumpavg"]."");
+//                 }
+//             } else {
+//                 echo "0 results";
+//             }     
 
-        }
-        else if ($consumpsum != null){
-            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum";
-            fwrite($myfile, $txt);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . "");
-                }
-            } else {
-                echo "0 results";
-            }
-        }
-        else if ($consumpavg != null){
-            $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpavg";
-            fwrite($myfile, $txt);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpavg"] . "");
-                }
-            } else {
-                echo "0 results";
-            }
-        }
-    }
-    else{
-        $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump";
-        fwrite($myfile, $txt);
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . "");
-                }
-            } else {
-                echo "0 results";
-            }
-    }
+//         }
+//         else if ($consumpsum != null){
+//             $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpsum";
+//             fwrite($myfile, $txt);
+//             if ($result->num_rows > 0) {
+//                 while ($row = $result->fetch_assoc()) {
+//                     fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpsum"] . "");
+//                 }
+//             } else {
+//                 echo "0 results";
+//             }
+//         }
+//         else if ($consumpavg != null){
+//             $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consumpavg";
+//             fwrite($myfile, $txt);
+//             if ($result->num_rows > 0) {
+//                 while ($row = $result->fetch_assoc()) {
+//                     fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consumpavg"] . "");
+//                 }
+//             } else {
+//                 echo "0 results";
+//             }
+//         }
+//     }
+//     else{
+//         $txt = "kid,billable_serv_id,service_addr,type,rate_code,bill_date,consump, geometry";
+//         fwrite($myfile, $txt);
+//             if ($result->num_rows > 0) {
+//                 while ($row = $result->fetch_assoc()) {
+//                     fwrite($myfile, "\n" . $row["kid"] . "," . $row["billable_serv_id"] . "," . $row["service_addr"] . " KELOWNA," . $row["type"] . "," . $row["rate_code"] . "," . $row["bill_date"] . "," . $row["consump"] . ",\"" . $row["geometry"] . "\"");
+//                 }
+//             } else {
+//                 echo "0 results";
+//             }
+//     }
 
 
 
@@ -209,7 +220,7 @@ $myfile = fopen("outfile.csv", "w") or die('Unable to open file');
 //     echo "0 results";
 // }
 
-fclose($myfile);
+// fclose($myfile);
 
 
 
