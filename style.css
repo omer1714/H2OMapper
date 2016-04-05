@@ -1,0 +1,72 @@
+#yearSelect {
+    float: center;
+    max-width: 360px;
+    min-height: 420px;
+    margin-top: 120px;
+    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
+    -webkit-box-shadow: 4px 4px 26px -2px rgba(0,0,0,0.3);
+    -moz-box-shadow: 4px 4px 26px -2px rgba(0,0,0,0.3);
+    box-shadow: 4px 4px 26px -2px rgba(0,0,0,0.3);
+}
+
+#boxTitle {
+    padding: 50px;
+    font-family: Verdana; 
+    font-size: 25px;
+}
+
+#yearOptions {
+    padding: 25px;
+}
+
+
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+
+.info{
+    float: right;
+    margin: 10px;
+}
+
+
+
+/* Tooltip container */
+.tooltip {
+
+    /*content:url(../img/info_icon.svg);*/
+
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: grey;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
