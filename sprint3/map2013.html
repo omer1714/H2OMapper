@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Fusion Tables queries</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 49.8879967, lng: -119.4399066},
+          zoom: 13
+        });
+
+        var layer = new google.maps.FusionTablesLayer({
+          map: map,
+          query: {
+            select: 'kid' ,
+            from: '1VbSz91TXsZoDCoXjOv9kMjT1rVNo9Pf2ldsaPQIg',
+            /*where: 'consumpavg < 50'*/
+          },
+          styleId: 3
+          /*
+              styleID = 2 is ConsumpSum
+              sytleID = 3 is ConsumpAvg
+          */
+        });
+        layer.setMap(map);
+        
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzw_ER4m7oh84pImN_U0BGT-orsMlgyvE&callback=initMap">
+    </script>
+  </body>
+</html>
